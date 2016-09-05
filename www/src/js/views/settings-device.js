@@ -6,7 +6,6 @@ module.exports = Backbone.Marionette.ItemView.extend({
   className: 'b-settings__device',
 
   template: function(model) {
-    console.log('TEMPLATE: ' + JSON.stringify(model));
     return template(model);
   }
 });
