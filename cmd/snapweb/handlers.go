@@ -18,15 +18,18 @@
 package main
 
 import (
-	"fmt"
+  "encoding/json"
+  "fmt"
 	"log"
+  "time"
 	"net/http"
 	"os"
 	"path/filepath"
 	"text/template"
 
-	"github.com/snapcore/snapd/client"
+  "syscall"
 
+	"github.com/snapcore/snapd/client"
 	"github.com/snapcore/snapweb/snappy"
 )
 
@@ -54,14 +57,113 @@ func getSnappyVersion() string {
 		return "snapd"
 	}
 
-	return "snapd " + version
+	return "snapd " + version.Version
 }
+
+func handleAssertions(w http.ResponseWriter, r *http.Request) {
+  // Fetch interesting assertions from client, package up here
+//  c := newSnapdClient()  // XXX: why the above? why not just call the func on a client
+  c := client.New(nil)
+  log.Println("GRABBING ASSERTIONS")
+
+  a, err := c.Known("account", nil)
+  if err != nil {
+    log.Println("Error retrieving assertion")
+  } else {
+  log.Println(fmt.Sprintf("chcking assertions length %d", len(a)))
+
+    for _, assert := range a {
+      log.Println("Assertion Found")
+      log.Println("Assertion Headers:", assert.Headers())
+      log.Println("Assertion Body:", assert.Body())
+    }
+  }
+}
+
+/*
+   Device bane
+   Brand
+   Nidek
+   Seruak
+   Opertating system
+   Interfaces
+   Uptime
+*/
+
+type DeviceInfoResponse struct {
+  DeviceName string `json:"deviceName"`
+  Brand string `json:"brand"`
+  Model string `json:"model"`
+  Serial string `json:"serial"`
+  OS string `json:"operatingSystem"`
+  Interfaces []string `json:"interfaces"`
+  Uptime string `json:"uptime"`
+}
+
+
+func handleDeviceInfo(w http.ResponseWriter, r *http.Request) {
+//  c := newSnapdClient()  // XXX: why the above? why not just call the func on a client?
+  log.Println("handleDeviceInfo:")
+
+  c := client.New(nil)
+  var info DeviceInfoResponse
+
+  // Server version
+  sysInfo, err := c.ServerVersion()
+  if err != nil {
+		log.Println("handleDeviceInfo: unable to get server version info", err)
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+
+  info.OS = sysInfo.OSID + " " + sysInfo.Series
+
+  // Interfaces
+  ifaces, err := c.Interfaces()
+  if err != nil {
+		log.Println("handleDeviceInfo: unable to get interfaces info", err)
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+
+  for _, slot := range ifaces.Slots {
+    info.Interfaces = append(info.Interfaces, slot.Name)
+  }
+
+  // Hostname
+  hostname, err := os.Hostname()
+  if err != nil {
+		log.Println("handleDeviceInfo: unable to get hostname info", err)
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+
+  info.DeviceName = hostname
+
+  // Uptime
+  var msi syscall.Sysinfo_t
+  err = syscall.Sysinfo(&msi)
+  if err != nil {
+		log.Println("handleDeviceInfo: unable to get uptime info", err)
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+
+  info.Uptime = time.Duration(msi.Uptime).String()
+
+  w.Header().Set("Content-Type", "application/json")
+  enc := json.NewEncoder(w)
+  err = enc.Encode(info)
+}
+
 
 func initURLHandlers(log *log.Logger) {
 	log.Println("Initializing HTTP handlers...")
-
 	snappyHandler := snappy.NewHandler()
 	http.Handle("/api/v2/packages/", snappyHandler.MakeMuxer("/api/v2/packages"))
+
+  http.HandleFunc("/api/v2/device-info", handleDeviceInfo)
+  http.HandleFunc("/api/v2/assertions/", handleAssertions)
 
 	http.Handle("/public/", loggingHandler(http.FileServer(http.Dir(filepath.Join(os.Getenv("SNAP"), "www")))))
 

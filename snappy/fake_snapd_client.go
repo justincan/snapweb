@@ -32,6 +32,10 @@ type FakeSnapdClient struct {
 	Version         string
 	Installed       string
 	Removed         string
+  Series          string
+  OSID            string
+  OSVersionID     string
+  OnClassic       bool
 }
 
 // Icon returns the icon of an installed snap
@@ -80,8 +84,14 @@ func (f *FakeSnapdClient) Remove(name string, options *client.SnapOptions) (stri
 }
 
 // ServerVersion returns the version of the running `snapd` daemon
-func (f *FakeSnapdClient) ServerVersion() (string, error) {
-	return f.Version, f.Err
+func (f *FakeSnapdClient) ServerVersion() (*client.ServerVersion, error) {
+  return &client.ServerVersion{
+    Version: f.Version,
+    Series: f.Series,
+    OSID: f.OSID,
+    OSVersionID: f.OSVersionID,
+    OnClassic: f.OnClassic,
+  }, nil
 }
 
 var _ SnapdClient = (*FakeSnapdClient)(nil)
