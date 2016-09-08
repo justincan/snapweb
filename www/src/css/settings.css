@@ -40,14 +40,35 @@ li.b-settings__row:last-of-type {
   margin:10px 0 0 10px;
 }
 
-.b-settings__device__row {
-  line-height:24px;
+.b-settings__content__row {
+  line-height: 2em;
 }
 
-.b-settings__device__row__name {
+.b-settings__content__row__name {
   font-weight: 500;
 }
 
+table {
+  overflow-x: scroll;
+  margin-bottom: 20px;
+  margin: 0 0 2.5em;
+  width: 100%;
+}
+
+thead {
+  border-bottom-width: 1px;
+  border-bottom-style: solid; border-bottom-color: grey;
+}
+
+th {
+  font-weight: 300;
+  text-align: left;
+  padding: 5px;
+}
+
+td {
+  padding: 5px;
+}
 
 @media screen and (min-width: 640px) {
   .b-settings {

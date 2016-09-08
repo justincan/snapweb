@@ -20,44 +20,44 @@ package main
 import (
   "encoding/json"
   "fmt"
-	"log"
+  "log"
   "time"
-	"net/http"
-	"os"
-	"path/filepath"
-	"text/template"
+  "net/http"
+  "os"
+  "path/filepath"
+  "text/template"
 
   "syscall"
 
-	"github.com/snapcore/snapd/client"
-	"github.com/snapcore/snapweb/snappy"
+  "github.com/snapcore/snapd/client"
+  "github.com/snapcore/snapweb/snappy"
 )
 
 type branding struct {
-	Name    string
-	Subname string
+  Name    string
+  Subname string
 }
 
 type templateData struct {
-	Branding     branding
-	SnapdVersion string
+  Branding     branding
+  SnapdVersion string
 }
 
 var newSnapdClient = newSnapdClientImpl
 
 func newSnapdClientImpl() snappy.SnapdClient {
-	return client.New(nil)
+  return client.New(nil)
 }
 
 func getSnappyVersion() string {
-	c := newSnapdClient()
+  c := newSnapdClient()
 
-	version, err := c.ServerVersion()
-	if err != nil {
-		return "snapd"
-	}
+  version, err := c.ServerVersion()
+  if err != nil {
+    return "snapd"
+  }
 
-	return "snapd " + version.Version
+  return "snapd " + version.Version
 }
 
 func handleAssertions(w http.ResponseWriter, r *http.Request) {
@@ -80,16 +80,6 @@ func handleAssertions(w http.ResponseWriter, r *http.Request) {
   }
 }
 
-/*
-   Device bane
-   Brand
-   Nidek
-   Seruak
-   Opertating system
-   Interfaces
-   Uptime
-*/
-
 type DeviceInfoResponse struct {
   DeviceName string `json:"deviceName"`
   Brand string `json:"brand"`
@@ -111,7 +101,7 @@ func handleDeviceInfo(w http.ResponseWriter, r *http.Request) {
   // Server version
   sysInfo, err := c.ServerVersion()
   if err != nil {
-		log.Println("handleDeviceInfo: unable to get server version info", err)
+    log.Println("handleDeviceInfo: unable to get server version info", err)
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return
   }
@@ -121,7 +111,7 @@ func handleDeviceInfo(w http.ResponseWriter, r *http.Request) {
   // Interfaces
   ifaces, err := c.Interfaces()
   if err != nil {
-		log.Println("handleDeviceInfo: unable to get interfaces info", err)
+    log.Println("handleDeviceInfo: unable to get interfaces info", err)
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return
   }
@@ -133,7 +123,7 @@ func handleDeviceInfo(w http.ResponseWriter, r *http.Request) {
   // Hostname
   hostname, err := os.Hostname()
   if err != nil {
-		log.Println("handleDeviceInfo: unable to get hostname info", err)
+    log.Println("handleDeviceInfo: unable to get hostname info", err)
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return
   }
@@ -144,7 +134,7 @@ func handleDeviceInfo(w http.ResponseWriter, r *http.Request) {
   var msi syscall.Sysinfo_t
   err = syscall.Sysinfo(&msi)
   if err != nil {
-		log.Println("handleDeviceInfo: unable to get uptime info", err)
+    log.Println("handleDeviceInfo: unable to get uptime info", err)
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return
   }
@@ -153,72 +143,105 @@ func handleDeviceInfo(w http.ResponseWriter, r *http.Request) {
 
   w.Header().Set("Content-Type", "application/json")
   enc := json.NewEncoder(w)
-  err = enc.Encode(info)
+  if err := enc.Encode(info); err != nil {
+    w.WriteHeader(http.StatusInternalServerError)
+    fmt.Fprintf(w, "Error: %s", err)
+    log.Print(err)
+  }
+}
+
+type TimeInfoResponse struct {
+  Date string `json:"date"`
+  Time string `json:"time"`
+  Timezone string `json:"timezone"`
+  NTPServer string `json:"ntpServer"`
+}
+
+func handleTimeInfo(w http.ResponseWriter, r *http.Request) {
+  log.Println("handleTimeInfo:")
+
+  var info TimeInfoResponse
+
+  var dt = time.Now()
+
+  info.Date = dt.Format("_2/1/_2")
+  info.Time = dt.Format("3:04PM")
+  info.Timezone = dt.Format("MST")
+  info.NTPServer = ""
+
+  w.Header().Set("Content-Type", "application/json")
+  enc := json.NewEncoder(w)
+  if err := enc.Encode(info); err != nil {
+    w.WriteHeader(http.StatusInternalServerError)
+    fmt.Fprintf(w, "Error: %s", err)
+    log.Print(err)
+  }
 }
 
 
 func initURLHandlers(log *log.Logger) {
-	log.Println("Initializing HTTP handlers...")
-	snappyHandler := snappy.NewHandler()
-	http.Handle("/api/v2/packages/", snappyHandler.MakeMuxer("/api/v2/packages"))
+  log.Println("Initializing HTTP handlers...")
+  snappyHandler := snappy.NewHandler()
+  http.Handle("/api/v2/packages/", snappyHandler.MakeMuxer("/api/v2/packages"))
 
   http.HandleFunc("/api/v2/device-info", handleDeviceInfo)
   http.HandleFunc("/api/v2/assertions/", handleAssertions)
+  http.HandleFunc("/api/v2/time-info", handleTimeInfo)
 
-	http.Handle("/public/", loggingHandler(http.FileServer(http.Dir(filepath.Join(os.Getenv("SNAP"), "www")))))
+  http.Handle("/public/", loggingHandler(http.FileServer(http.Dir(filepath.Join(os.Getenv("SNAP"), "www")))))
 
-	if iconDir, relativePath, err := snappy.IconDir(); err == nil {
-		http.Handle(fmt.Sprintf("/%s/", relativePath), loggingHandler(http.FileServer(http.Dir(filepath.Join(iconDir, "..")))))
-	} else {
-		log.Println("Issues while getting icon dir:", err)
-	}
+  if iconDir, relativePath, err := snappy.IconDir(); err == nil {
+    http.Handle(fmt.Sprintf("/%s/", relativePath), loggingHandler(http.FileServer(http.Dir(filepath.Join(iconDir, "..")))))
+  } else {
+    log.Println("Issues while getting icon dir:", err)
+  }
 
-	http.HandleFunc("/", makeMainPageHandler())
+  http.HandleFunc("/", makeMainPageHandler())
 }
 
 func loggingHandler(h http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Println(r.Method, r.URL.Path)
-		h.ServeHTTP(w, r)
-	})
+  return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+    log.Println(r.Method, r.URL.Path)
+    h.ServeHTTP(w, r)
+  })
 }
 
 func getBranding() branding {
-	return branding{
-		Name:    "Ubuntu",
-		Subname: "",
-	}
+  return branding{
+    Name:    "Ubuntu",
+    Subname: "",
+  }
 }
 
 func makeMainPageHandler() http.HandlerFunc {
-	b := getBranding()
-	v := getSnappyVersion()
+  b := getBranding()
+  v := getSnappyVersion()
 
-	return func(w http.ResponseWriter, r *http.Request) {
-		data := templateData{
-			Branding:     b,
-			SnapdVersion: v,
-		}
+  return func(w http.ResponseWriter, r *http.Request) {
+    data := templateData{
+      Branding:     b,
+      SnapdVersion: v,
+    }
 
-		if err := renderLayout("index.html", &data, w); err != nil {
-			log.Println(err)
-		}
-	}
+    if err := renderLayout("index.html", &data, w); err != nil {
+      log.Println(err)
+    }
+  }
 }
 
 func renderLayout(html string, data *templateData, w http.ResponseWriter) error {
-	htmlPath := filepath.Join(os.Getenv("SNAP"), "www", "templates", html)
-	if _, err := os.Stat(htmlPath); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return err
-	}
+  htmlPath := filepath.Join(os.Getenv("SNAP"), "www", "templates", html)
+  if _, err := os.Stat(htmlPath); err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return err
+  }
 
-	layoutPath := filepath.Join(os.Getenv("SNAP"), "www", "templates", "base.html")
-	t, err := template.ParseFiles(layoutPath, htmlPath)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return err
-	}
+  layoutPath := filepath.Join(os.Getenv("SNAP"), "www", "templates", "base.html")
+  t, err := template.ParseFiles(layoutPath, htmlPath)
+  if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return err
+  }
 
-	return t.Execute(w, *data)
+  return t.Execute(w, *data)
 }

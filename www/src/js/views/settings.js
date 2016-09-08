@@ -13,6 +13,7 @@ var SettingsTimeView = require('./settings-time.js');
 module.exports = Backbone.Marionette.LayoutView.extend({
   initialize: function(options) {
     this.deviceInfo = options.deviceInfo;
+    this.timeInfo = options.timeInfo;
   },
 
   template: function(model) {
@@ -35,7 +36,9 @@ module.exports = Backbone.Marionette.LayoutView.extend({
     var view;
     switch (id) {
       case 'profile':
-        view = new SettingsProfileView();
+        view = new SettingsProfileView({
+            model: new Backbone.Model({fullName: 'Catty McCat', email: 'cat@comfycathouse.org'})
+          });
         break;
       case 'users':
         view = new SettingsUsersView();
@@ -44,7 +47,9 @@ module.exports = Backbone.Marionette.LayoutView.extend({
         view = new SettingsUpdatesView();
         break;
       case 'time':
-        view = new SettingsTimeView();
+        view = new SettingsTimeView({
+            model: this.timeInfo
+          });
         break;
       case 'device':
       default:

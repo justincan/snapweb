@@ -5,7 +5,7 @@ var template = require('../templates/settings-time.hbs');
 module.exports = Backbone.Marionette.ItemView.extend({
   className: 'b-settings__time',
 
-  template: function() {
-    return template();
+  template: function(model) {
+    return template(model);
   }
 });

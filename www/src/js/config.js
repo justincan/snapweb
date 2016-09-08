@@ -1,6 +1,7 @@
 module.exports = {
   PACKAGES: '/api/v2/packages/',
   DEVICE_INFO: '/api/v2/device-info',
+  TIME_INFO: '/api/v2/time-info',
   FILTERED_SNAPS: [
     'snapweb',
     'ubuntu-core'
