@@ -1,3 +1,5 @@
 *.snap
 node_modules
 public
+*~
+\#*\#
