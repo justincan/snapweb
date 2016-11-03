@@ -3,6 +3,8 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 Backbone.$ = $;
 var Marionette = require('backbone.marionette');
+var React = require('react');
+var ReactDOM = require('react-dom');
 var template = require('../templates/settings.hbs');
 var SettingsDeviceView = require('./settings-device.js');
 var SettingsProfileView = require('./settings-profile.js');
@@ -50,10 +52,11 @@ module.exports = Backbone.Marionette.LayoutView.extend({
           });
         break;
       case 'device':
-      default:
-        view = new SettingsDeviceView({
-            model: this.deviceInfo
-          });
+      default: {
+        ReactDOM.render(React.createElement(SettingsDeviceView, {model: this.deviceInfo}),
+                      this.$('.b-settings__content').get(0));
+        return;
+      }
     }
 
     this.showChildView('contentRegion', view);
@@ -66,7 +69,7 @@ module.exports = Backbone.Marionette.LayoutView.extend({
     this.$('#' + id).addClass('is-active');
   },
 
-  onBeforeShow: function() {
+  onAttach: function() {
     this.showContent('device');
   }
 });
