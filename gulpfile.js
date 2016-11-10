@@ -17,6 +17,7 @@ var sourcemaps = require('gulp-sourcemaps');
 var source = require('vinyl-source-stream');
 var uglify = require('gulp-uglify');
 var watchify = require('watchify');
+var cssmodulesify = require('css-modulesify');
 
 gulp.task('js:build', ['js:clean', 'js:lint'], function() {
   return createBundler();
@@ -31,6 +32,12 @@ function createBundler(watch) {
     cache: {},
     packageCache: {}
   });
+
+  bundler.plugin(cssmodulesify, {
+      rootDir: './www/src/css',
+      output: './www/staging/css/snapweb-modules.css',
+    });
+
   bundler.transform('hbsfy');
   bundler.transform({global: true}, 'aliasify');
 
@@ -68,14 +75,15 @@ gulp.task('js:lint', function() {
 });
 
 // Styles
-gulp.task('styles', ['styles:clean'], function() {
+gulp.task('styles', ['styles:clean', 'js:build'], function() {
   var processors = [
     autoprefixer({browsers: ['last 1 version']}),
     bemlinter('bem')
   ];
 
   return gulp.src([
-    'www/src/css/styles.scss'
+    'www/src/css/styles.scss',
+    'www/staging/css/*.css'
   ])
   .pipe(sass({
     includePaths: ['node_modules']
@@ -129,4 +137,4 @@ gulp.task('install', ['default'], function() {
     .pipe(gulp.dest('../install'));
 });
 
-gulp.task('default', ['js:build', 'styles', 'images']);
+gulp.task('default', ['styles', 'images']);
