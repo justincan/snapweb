@@ -22,7 +22,7 @@ module.exports = {
           }),
           collection: SnaplistTools.updateInstalledStates(snaplist)
         });
-        chan.command('set:content', view);
+        chan.command('set:content', {backboneView: view});
       }
     });
   }

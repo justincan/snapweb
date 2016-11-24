@@ -1,7 +1,7 @@
 var $ = require('jquery');
 var Backbone = require('backbone');
-Backbone.$ = $;
 var Marionette = require('backbone.marionette');
+var React = require('react');
 var Radio = require('backbone.radio');
 var HomeLayoutView = require('../views/home.js');
 var Bask = require('../collections/snaplist.js');
@@ -16,10 +16,10 @@ module.exports = {
         'installed_only': true
       }),
       success: function(snaplist) {
-        var view = new HomeLayoutView({
+        var element = React.createElement(HomeLayoutView, {
           collection: snaplist.installed()
         });
-        chan.command('set:content', view);
+        chan.command('set:content', {reactElement: element});
       }
     });
   }
