@@ -17,7 +17,7 @@ module.exports = {
         var view =  new SnapLayoutView({
           model: snap
         });
-        rootChannel.command('set:content', view);
+        rootChannel.command('set:content', {backboneView: view});
       },
       error: function() {
         // TODO error view

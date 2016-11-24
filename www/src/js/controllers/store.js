@@ -15,7 +15,7 @@ module.exports = {
         var view =  new StoreLayoutView({
           collection: SnaplistTools.updateInstalledStates(snaplist)
         });
-        chan.command('set:content', view);
+        chan.command('set:content', {backboneView: view});
       }
     });
   }

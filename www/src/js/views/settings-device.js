@@ -5,19 +5,18 @@ var Marionette = require('backbone.marionette');
 var React = require('react');
 var ReactBackbone = require('react.backbone');
 var Radio = require('backbone.radio');
-var template = require('../templates/settings-device.hbs');
 var Config = require('../config.js');
 var chan = Radio.channel('root');
 
 
 module.exports = React.createBackboneClass({
 
-  restart: function() {
+  sendAction: function(action) {
     Backbone.ajax({
                 url: Config.DEVICE_ACTION,
                 contentType: 'application/json',
                 type: 'POST',
-                data: '{ "actionType": "restart" }',
+                data: { 'actionType': action },
                 processData: false,
                 async: true,
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -27,19 +26,12 @@ module.exports = React.createBackboneClass({
               });
   },
 
+  restart: function() {
+    this.sendAction('restart');
+  },
+
   powerOff: function() {
-    Backbone.ajax({
-                url: Config.DEVICE_ACTION,
-                contentType: 'application/json',
-                type: 'POST',
-                data: '{ "actionType": "power-off" }',
-                processData: false,
-                async: true,
-                error: function(jqXHR, textStatus, errorThrown) {
-                  chan.command('alert:error',
-                               new Backbone.Model({message: errorThrown}));
-                }
-              });
+    this.sendAction('power-off');
   },
 
   render: function() {
@@ -81,27 +73,27 @@ module.exports = React.createBackboneClass({
           </div>
         </div>
 
-        <hr>
+        <hr />
 
         <h2>Power</h2>
-        <div class="row">
-            <div class="col-2">
+        <div className="row">
+            <div className="col-2">
                 <p>
                   <button onClick={this.restart} type="p-button--neutral" name="">Restart</button>
                 </p>
             </div>
-            <div class="col-2">
+            <div className="col-2">
               <p>
                 <button onClick={this.powerOff} type="p-button--neutral" name="">Power off</button>
               </p>
             </div>
         </div>
 
-        <hr>
+        <hr />
 
         <h2>Factory settings</h2>
-        <div class="row">
-            <div class="col-3">
+        <div className="row">
+            <div className="col-3">
                 <button type="p-button--neutral" name="">Reset to factory settings</button>
             </div>
         </div>
