@@ -5,12 +5,13 @@ var Marionette = require('backbone.marionette');
 
 var homeController = require('../controllers/home.js');
 // var initController = require('../controllers/init.js');
+/*
 var searchController = require('../controllers/search.js');
 var storeController = require('../controllers/store.js');
 var settingsController = require('../controllers/settings.js');
 var snapController = require('../controllers/snaps.js');
 var tokenController = require('../controllers/token.js');
-
+*/
 module.exports = {
 
   home: new Marionette.AppRouter({
@@ -20,6 +21,7 @@ module.exports = {
     }
   }),
 
+/*
   token: new Marionette.AppRouter({
     controller: tokenController,
     appRoutes: {
@@ -56,4 +58,5 @@ module.exports = {
       'search?q=:query': 'query',
     }
   })
+  */
 };

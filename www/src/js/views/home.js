@@ -1,26 +1,19 @@
-// home view
+/** @jsx React.DOM */
+
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
+var React = require('react');
+var ReactBackbone = require('react.backbone');
 var SnapListView = require('./snaplist.js');
-var template = require('../templates/home.hbs');
 
-module.exports = Backbone.Marionette.LayoutView.extend({
+module.exports = React.createBackboneClass({
 
-  className: 'b-layout__container',
-
-  template : function(model) {
-    return template(model);
-  },
-
-  onBeforeShow: function() {
-    // TODO if collection empty use emptyView
-    this.showChildView('installedRegion', new SnapListView({
-      model: this.model,
-      collection: this.collection
-    }));
-  },
-
-  regions: {
-    installedRegion: '.region-installed'
+  render: function() {
+    return (
+      <SnapListView
+        model={this.props.model}
+        collection={this.props.collection} />
+    );
   }
+
 });

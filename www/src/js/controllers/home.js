@@ -1,7 +1,7 @@
 var $ = require('jquery');
 var Backbone = require('backbone');
-Backbone.$ = $;
 var Marionette = require('backbone.marionette');
+var React = require('react');
 var Radio = require('backbone.radio');
 var Snap = require('../models/snap.js');
 var HomeLayoutView = require('../views/home.js');
@@ -19,7 +19,7 @@ module.exports = {
       success: function(snaplist) {
         var c = snaplist.all()
 
-        var view = new HomeLayoutView({
+        var element = React.createElement(HomeLayoutView, {
           model: new Backbone.Model({
             title: 'Installed snaps',
             isHomeActive: true,
@@ -27,7 +27,7 @@ module.exports = {
           collection: c
         });
 
-        chan.command('set:content', view);
+        chan.command('set:content', {reactElement: element});
       }
     });
   },

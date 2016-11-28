@@ -18,6 +18,7 @@ module.exports = {
           storeSnaplist.fetch({data: $.param({'featured_only': true})}),
           sections.fetch()
         ).then(function() {
+
         var view =  new StoreLayoutView({
           model: new Backbone.Model({
             query: '',
@@ -32,7 +33,7 @@ module.exports = {
           collection: SnaplistTools.updateInstalledStates(storeSnaplist)
         });
 
-        chan.command('set:content', view);
+        chan.command('set:content', {backboneView: view});
       });
   },
   section: function(s) {
@@ -81,7 +82,7 @@ module.exports = {
           collection: storeSnaplist.all()
         });
 
-        chan.command('set:content', view);
+        chan.command('set:content', {backboneView: view});
       });
     }
   }

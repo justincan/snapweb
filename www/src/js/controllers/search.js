@@ -34,7 +34,7 @@ module.exports = {
           collection: snaplist.length === 1 ? null : snaplist,
           matchedSnap: match.length === 1 ? match[0] : null,
         });
-        chan.command('set:content', view);
+        chan.command('set:content', {backboneView: view});
       }
     });
   }
