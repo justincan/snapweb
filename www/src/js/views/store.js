@@ -1,11 +1,41 @@
 // store layout view
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
+var React = require('react');
+var ReactBacknone = require('react.backbone');
+
 var SearchBarView = require('./search-bar.js');
 var StorelistView = require('./storelist.js');
 var StoreHeaderView = require('./store-header.js');
-var template = require('../templates/store.hbs');
+//var template = require('../templates/store.hbs');
 
+module.exports = React.createBackboneClass({
+
+  render: function() {
+    var model = this.props.models;
+
+    return (
+      <div className="b-grey-wrapper">
+        <div
+          style="display: inline-block; width: 100%; margin-top: 20px;">
+          <SearchBarView model={mode} />
+        </div>
+
+        <StoreHeaderView
+          model={model}
+          collection={this.props.sections}
+        />
+
+        <StorelistView
+          model={model}
+          collection={this.collection.all()}
+          />
+      </div>
+    );
+  }
+});
+
+/*
 module.exports = Backbone.Marionette.LayoutView.extend({
 
   className: 'b-store',
@@ -36,3 +66,4 @@ module.exports = Backbone.Marionette.LayoutView.extend({
     storeSnapItemsList: '.region-snaplist',
   }
 });
+*/

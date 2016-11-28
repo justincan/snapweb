@@ -33,17 +33,15 @@ module.exports = React.createBackboneClass({
             {homeActive &&
               <AddStoreCard />}
 
-            {collection.length == 0 ? (
+            {collection.length == 0 &&
               <EmptySnaplistView />
-            ) : (
-              <ul>
-                {collection.map(function(snap) {
-                  return (
-                    <SnaplistItemView key={snap.id} model={snap} />
-                  );
-                })}
-              </ul>
-            )}
+            }
+
+            {collection.map(function(snap) {
+              return (
+                <SnaplistItemView key={snap.id} model={snap} />
+              );
+            })}
           </div>
         </div>
       </div>

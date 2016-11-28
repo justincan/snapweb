@@ -59,8 +59,7 @@ module.exports = React.createBackboneClass({
     var description = model.get('description');
     var prettyInstalledSize = model.get('prettyInstalledSize');
 
-//    var rootDivClass = "p-card-" + model.get('type');
-    var rootDivClass = "p-card";
+    var rootDivClass = "p-card p-card-" + model.get('type');
 
     return (
       <div className={rootDivClass}>
