@@ -2,3 +2,18 @@
 node_modules
 public
 /www/src/css/*.css
+.coverage-go
+.coverage-js
+cert.pem
+key.pem
+
+# swap
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+# session
+Session.vim
+# temporary
+.netrwhist
+*~
+# auto-generated tag files
+tags

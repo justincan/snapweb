@@ -2,16 +2,12 @@
 
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
+var React = require('react');
+var ReactBackbone = require('react.backbone');
 
 var Radio = require('backbone.radio');
 var Handlebars = require('hbsfy/runtime');
-var InstallBehavior = require('../behaviors/install.js');
-var template = require('../templates/snaplist-item.hbs');
 var snapChannel = Radio.channel('snap');
-var ComparisonHBSHelpers = require('handlebars-helpers').comparison();
-
-var React = require('react');
-var ReactBackbone = require('react.backbone');
 
 
 var Installer = React.createBackboneClass({
@@ -63,7 +59,8 @@ module.exports = React.createBackboneClass({
     var description = model.get('description');
     var prettyInstalledSize = model.get('prettyInstalledSize');
 
-    var rootDivClass = "p-card" + model.get('type');
+//    var rootDivClass = "p-card-" + model.get('type');
+    var rootDivClass = "p-card";
 
     return (
       <div className={rootDivClass}>
@@ -87,7 +84,7 @@ module.exports = React.createBackboneClass({
           }
           <footer className="p-card__footer">
             <div className="u-float--right">
-              <Installer />
+              <Installer model={model}/>
             </div>
           </footer>
         </a>
