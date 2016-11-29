@@ -1,15 +1,19 @@
+/** @jsx React.DOM */
+
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
-var SectionsItemView = require('../views/store-sections-item.js');
-var template = require('../templates/store-header.hbs');
+var React = require('react')
+var ReactBackbone = require('react.backbone');
 
-module.exports = Marionette.CompositeView.extend({
 
-  childViewContainer: '.b-sections-list',
+module.exports = React.createBackboneClass({
+  render: function() {
+    var model = this.props.model;
 
-  template : function(model) {
-    return template(model);
-  },
-
-  childView: SectionsItemView,
+    return (
+      <span className="b-sections-list">
+        <a href={"/search?section=" + model.get('sectionName')}>sectionName</a>
+      </span>
+    );
+  }
 });

@@ -1,7 +1,49 @@
-// storelist view
-var Snaplist = require('./snaplist.js');
+/** @jsx React.DOM */
+
+var Backbone = require('backbone');
+var Marionette = require('backbone.marionette');
+var React = require('react')
+var ReactBackbone = require('react.backbone');
+
 var StorelistItemView = require('./storelist-item.js');
 
-module.exports = Snaplist.extend({
-  childView: StorelistItemView
+module.exports = React.createBackboneClass({
+  render: function() {
+    var model = this.props.model;
+    var collection = this.props.collection;
+    var homeActive = model.get('isHomeActive');
+
+    return (
+      <div className="p-strip--light">
+        <div className="row">
+          <div id="js-snaplist" className="p-card-deck">
+
+            <div className="card-deck-row-header">
+              <div className="card-deck-row-header__item">
+                Name
+              </div>
+              <div className="card-deck-row-header__item">
+                Publisher
+              </div>
+              <div className="card-deck-row-header__item">
+              </div>
+            </div>
+
+            {homeActive &&
+              <AddStoreCard />}
+
+            {collection.length == 0 &&
+              <EmptySnaplistView />
+            }
+
+            {collection.map(function(snap) {
+              return (
+                <StorelistItemView key={snap.id} model={snap} />
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
 });

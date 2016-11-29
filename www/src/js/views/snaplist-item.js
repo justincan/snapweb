@@ -35,9 +35,9 @@ var Installer = React.createBackboneClass({
       var installButton = '';
 
       if (isInstalled) {
-        installButton = <button class="b-installer__button p-button--positive">Installed</button>
+        installButton = <button className="b-installer__button p-button--positive">Installed</button>
       } else {
-        installButton = <button class="b-installer__button p-button--negative" disabled>Not installable</button>
+        installButton = <button className="b-installer__button p-button--negative" disabled>Not installable</button>
       }
 
       return (

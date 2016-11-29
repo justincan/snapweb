@@ -6,10 +6,10 @@ var Marionette = require('backbone.marionette');
 var homeController = require('../controllers/home.js');
 // var initController = require('../controllers/init.js');
 //var searchController = require('../controllers/search.js');
-//var storeController = require('../controllers/store.js');
-/*
+var storeController = require('../controllers/store.js');
 var settingsController = require('../controllers/settings.js');
 var snapController = require('../controllers/snaps.js');
+/*
 var tokenController = require('../controllers/token.js');
 */
 module.exports = {
@@ -37,7 +37,7 @@ module.exports = {
       'search?q=': 'index'
     }
   }),
-/*
+
   settings: new Marionette.AppRouter({
     controller: settingsController,
     appRoutes: {
@@ -52,6 +52,7 @@ module.exports = {
     }
   }),
 
+/*
   search: new Marionette.AppRouter({
     controller: searchController,
     appRoutes: {

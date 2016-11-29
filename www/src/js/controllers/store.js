@@ -2,6 +2,7 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 Backbone.$ = $;
 var Marionette = require('backbone.marionette');
+var React = require('react');
 var Radio = require('backbone.radio');
 var StoreLayoutView = require('../views/store.js');
 var Sections = require('../collections/sections.js');
@@ -19,7 +20,7 @@ module.exports = {
           sections.fetch()
         ).then(function() {
 
-        var view =  new StoreLayoutView({
+        var element = React.createElement(StoreLayoutView, {
           model: new Backbone.Model({
             query: '',
             title: 'Featured snaps',
@@ -33,7 +34,7 @@ module.exports = {
           collection: SnaplistTools.updateInstalledStates(storeSnaplist)
         });
 
-        chan.command('set:content', {backboneView: view});
+        chan.command('set:content', {reactElement: element});
       });
   },
   section: function(s) {
@@ -47,7 +48,7 @@ module.exports = {
       $.when(
         storeSnaplist.fetch()
       ).then(function() {
-        var view =  new StoreLayoutView({
+        var element = React.createElement(StoreLayoutView, {
           model: new Backbone.Model({
             query: '',
             title: 'Private',
@@ -61,14 +62,14 @@ module.exports = {
           collection: storeSnaplist.private()
         });
 
-        chan.command('set:content', view);
+        chan.command('set:content', {reactElement: element});
       });
     }
     else {
       $.when(
         storeSnaplist.fetch({data: $.param({'section': s})})
       ).then(function() {
-        var view =  new StoreLayoutView({
+        var element = React.createElement(StoreLayoutView, {
           model: new Backbone.Model({
             query: '',
             title: s,
@@ -82,7 +83,7 @@ module.exports = {
           collection: storeSnaplist.all()
         });
 
-        chan.command('set:content', {backboneView: view});
+        chan.command('set:content', {reactElement: element});
       });
     }
   }
