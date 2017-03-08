@@ -1,3 +1,43 @@
+
+import React from 'react';
+import Card from '../components/snaplist-item';
+
+
+export default class SnapListView extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    const cards = this.props.collection.map((snap, index) =>
+      <Card
+        key={index}
+        model={snap}
+      />);  
+
+    return (
+      <div className="p-strip--light">
+        <div className="row">
+          <div id="js-snaplist" className="p-card-deck">
+            <div className="card-deck-row-header">
+              <div className="card-deck-row-header__item">
+                  Name
+              </div>
+              <div className="card-deck-row-header__item">
+                  Publisher
+              </div>
+              <div className="card-deck-row-header__item">
+              </div>
+            </div>
+            {cards}
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+/*
 // snaplist view
 var _ = require('lodash');
 var $ = require('jquery');
@@ -40,3 +80,4 @@ module.exports = Marionette.CompositeView.extend({
 
   emptyView: EmptySnaplistView
 });
+*/

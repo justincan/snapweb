@@ -1,5 +1,29 @@
-// router.js
 
+import React from 'react';
+import { Route, IndexRoute } from 'react-router';
+
+import App from '../views/app';
+import Home from '../views/home';
+import Snap from '../views/snap';
+import Store from '../views/store';
+//import Search from '../views/search';
+import Settings from '../views/settings';
+import Token from '../views/token';
+
+export default (
+  <Route path="/" component={App}>
+    <IndexRoute component={Home} />
+    <Route path="snap/:id" component={Snap} />
+{/*    <Route path="store" component={Store} /> */}
+    <Route path="store/section/:section" component={Store} />
+{/*    <Route path="search" component={Search} /> */}
+{/*    <Route path="settings" component={Settings} /> */}
+    <Route path="access-control" component={Token} />
+  </Route>
+);
+
+
+/*
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 
@@ -57,3 +81,4 @@ module.exports = {
     }
   })
 };
+*/

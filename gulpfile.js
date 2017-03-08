@@ -26,7 +26,7 @@ gulp.task('js:clean', function(cb) {
 });
 
 function createBundler(watch) {
-  var bundler = browserify('./www/src/js/app.js', {
+  var bundler = browserify('./www/src/js/index.js', {
     cache: {},
     packageCache: {}
   });

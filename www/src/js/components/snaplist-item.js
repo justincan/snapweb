@@ -1,4 +1,3 @@
-
 var React = require('react');
 var Backbone = require('backbone');
 var ReactBackbone = require('react.backbone');
@@ -39,3 +38,4 @@ module.exports = React.createBackboneClass({
     );
   }
 });
+

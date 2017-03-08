@@ -1,6 +1,26 @@
-// app.js
-'use strict';
 
+import React from 'react';
+
+import Header from '../components/header'
+import Footer from '../components/footer';
+
+
+export default class App extends React.Component {
+  render() {
+    console.log("app.render");
+    return (
+      <div>
+        <Header />
+          {this.props.children}
+        <Footer />
+      </div>
+    );
+  }
+};
+
+// TODO: alert?
+
+/*
 var $ = require('jquery');
 var Backbone = require('backbone');
 Backbone.$ = $;
@@ -30,3 +50,4 @@ $(document).ajaxError(function(event, jqxhr, settings, exception) {
     window.location = '/access-control';
   }
 });
+*/

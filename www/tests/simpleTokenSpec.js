@@ -18,7 +18,6 @@ describe('AccessToken', function() {
   
   it('should have a model and a view', function() {
     expect(this.model).toEqual(jasmine.any(Backbone.Model));
-    expect(this.view).toEqual(jasmine.any(Backbone.Marionette.ItemView));
     expect(this.view.$el.find('#submit').length).toBeTruthy();
   });
 

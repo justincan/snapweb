@@ -1,16 +1,15 @@
 
-var React = require('react');
+import React from 'react';
 
-module.exports = React.createClass({
-  gridClicked: function() {
+
+export default class DeskStyle extends React.Component {
+  gridClicked = () =>
     this.props.styleChanged('grid');
-  },
 
-  rowClicked: function() {
+  rowClicked = () =>
     this.props.styleChanged('row');
-  },
 
-  render: function() {
+  render() {
     var deckClass = "p-view-filters " +
         (this.props.deckStyle === 'grid' ?
          'p-view-filters--grid' : 'p-view-filters--row');
@@ -71,5 +70,5 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}
 
