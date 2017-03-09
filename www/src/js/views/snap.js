@@ -4,7 +4,7 @@ import React from 'react';
 import Snap from '../models/snap';
 import DeviceInfo from '../models/device-info';
 
-var rootChannel = Radio.channel('root');
+//var rootChannel = Radio.channel('root');
 
 export default class SnapView extends React.Component {
   state = {

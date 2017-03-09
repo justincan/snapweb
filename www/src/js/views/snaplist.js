@@ -1,3 +1,4 @@
+/*
 
 import React from 'react';
 import Card from '../components/snaplist-item';
@@ -36,8 +37,8 @@ export default class SnapListView extends React.Component {
     );
   }
 }
+*/
 
-/*
 // snaplist view
 var _ = require('lodash');
 var $ = require('jquery');
@@ -80,4 +81,3 @@ module.exports = Marionette.CompositeView.extend({
 
   emptyView: EmptySnaplistView
 });
-*/

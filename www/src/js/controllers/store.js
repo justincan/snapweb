@@ -70,6 +70,7 @@ module.exports = {
     fetchSnapList('Featured snaps')
   },
   section: function(s) {
+    console.log("SECTION=", s);
     // Special case for private section which is not a section
     // per se but a specificity of a snap
     if (s === 'private') {

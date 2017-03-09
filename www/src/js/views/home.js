@@ -1,3 +1,4 @@
+/*
 import $ from 'jquery';
 import React from 'react';
 import Backbone from 'backbone';
@@ -60,9 +61,8 @@ export default class Home extends React.Component {
     );
   } 
 }
+*/
 
-
-/*
 // home view
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
@@ -119,4 +119,3 @@ module.exports = Backbone.Marionette.LayoutView.extend({
     systemSnapsRegion: '.region-system-snaps',
   },
 });
-*/
